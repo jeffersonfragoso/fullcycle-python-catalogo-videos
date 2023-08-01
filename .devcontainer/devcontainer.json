@@ -1,0 +1,55 @@
+
+{
+   "name": "catalogo-videos",
+   "dockerComposeFile": [
+      "../docker-compose.yaml",
+      "docker-compose.yml"
+   ],
+   "settings": {
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "python.pythonPath": "/usr/local/bin/python",
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": false,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    }
+},
+   "service": "app",
+   "extensions": [
+    "alefragnani.project-manager",
+    "almenon.arepl",
+    "Cardinal90.multi-cursor-case-preserve",
+    "eamodio.gitlens",
+    "GitLab.gitlab-workflow",
+    "KevinRose.vsc-python-indent",
+    "mhutchie.git-graph",
+    "ms-azuretools.vscode-docker",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-toolsai.jupyter",
+    "ms-toolsai.jupyter-keymap",
+    "ms-toolsai.jupyter-renderers",
+    "njpwerner.autodocstring",
+    "njqdev.vscode-python-typehint",
+    "rangav.vscode-thunder-client",
+    "ryu1kn.partial-diff",
+    "ryu1kn.text-marker",
+    "GitHub.remotehub",
+    "visualstudioexptteam.vscodeintellicode",
+    // "sonarsource.sonarlint-vscode",
+    "mikestead.dotenv",
+    "humao.rest-client",
+    "bungcip.better-toml",
+    "vivaxy.vscode-conventional-commits",
+    "tamasfe.even-better-toml"
+],
+   "workspaceFolder": "/home/python/app",
+   "remoteUser": "python",
+   "features": {
+      "docker-from-docker": "latest"
+    }
+}
