@@ -6,6 +6,7 @@ authors = [
     {name = "Jefferson Fragoso de Souza", email = "jefferson.fragoso@pgmais.com.br"},
 ]
 dependencies = [
+    "django>=4.0.4",
     "autopep8>=2.0.2",
     "djangorestframework>=3.14.0",
     "pytest-cov>=4.1.0",
@@ -28,8 +29,10 @@ dev = [
 ]
 
 [tool.pdm.scripts]
+manage="python ./src/django_app/manage.py"
 pep8 = "autopep8 --in-place --recursive ./src"
 pylint = "pylint ./src"
+runserver = "pdm run manage runserver 0.0.0.0:8000"
 pytest = "pytest --ignore __pypackages__"
 test_cov = "pdm run test --cov ./src --cov-fail-under 80"
 test_cov_html = "pdm run test_cov --cov-report html:./__coverage"

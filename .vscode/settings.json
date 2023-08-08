@@ -1,4 +1,5 @@
 {
+  "python.linting.pylintPath": "pylint",
   "python.linting.pylintEnabled": false,
   "python.linting.enabled": true,
   "python.linting.pylintArgs":[
