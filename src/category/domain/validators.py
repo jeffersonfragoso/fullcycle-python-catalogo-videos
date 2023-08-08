@@ -1,7 +1,10 @@
 from typing import Dict
-from __seedwork.domain.validators import DRFValidator, StrictBooleanField, StrictCharField
 from rest_framework import serializers
-from rest_framework import serializers
+from __seedwork.domain.validators import (
+    DRFValidator,
+    StrictBooleanField,
+    StrictCharField
+)
 
 
 class CategoryRules(serializers.Serializer):

@@ -15,6 +15,11 @@ class _SearchResult(DefaultSearchResult):
     pass
 
 
-class CategoryRepository(SearchableRepositoryInterface[Category, _SearchParams, _SearchResult], ABC):
+class CategoryRepository(
+    SearchableRepositoryInterface[
+        Category, _SearchParams, _SearchResult
+    ],
+    ABC
+):
     SearchParams = _SearchParams
     SearchResult = _SearchResult

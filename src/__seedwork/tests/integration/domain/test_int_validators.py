@@ -87,7 +87,12 @@ class TestStrictBooleanFieldIntegration(unittest.TestCase):
         self.assertEqual(
             serializer.errors,
             {
-                'active': [serializers.ErrorDetail(string='Must be a valid boolean.', code='invalid')]
+                'active': [
+                    serializers.ErrorDetail(
+                        string='Must be a valid boolean.',
+                        code='invalid'
+                    )
+                ]
             }
         )
 
@@ -96,7 +101,12 @@ class TestStrictBooleanFieldIntegration(unittest.TestCase):
         self.assertEqual(
             serializer.errors,
             {
-                'active': [serializers.ErrorDetail(string='Must be a valid boolean.', code='invalid')]
+                'active': [
+                    serializers.ErrorDetail(
+                        string='Must be a valid boolean.',
+                        code='invalid'
+                    )
+                ]
             }
         )
 
@@ -105,7 +115,12 @@ class TestStrictBooleanFieldIntegration(unittest.TestCase):
         self.assertEqual(
             serializer.errors,
             {
-                'active': [serializers.ErrorDetail(string='Must be a valid boolean.', code='invalid')]
+                'active': [
+                    serializers.ErrorDetail(
+                        string='Must be a valid boolean.',
+                        code='invalid'
+                    )
+                ]
             }
         )
 
@@ -115,7 +130,12 @@ class TestStrictBooleanFieldIntegration(unittest.TestCase):
         self.assertEqual(
             serializer.errors,
             {
-                'active': [serializers.ErrorDetail(string='Must be a valid boolean.', code='invalid')]
+                'active': [
+                    serializers.ErrorDetail(
+                        string='Must be a valid boolean.',
+                        code='invalid'
+                    )
+                ]
             }
         )
 
@@ -131,4 +151,3 @@ class TestStrictBooleanFieldIntegration(unittest.TestCase):
 
         serializer = StubStrictBoolFieldSerializer(data={'active': False})
         self.assertTrue(serializer.is_valid())
-

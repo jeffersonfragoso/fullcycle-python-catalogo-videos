@@ -1,3 +1,5 @@
+# pylint: disable=R0801
+
 import unittest
 
 from __seedwork.domain.exceptions import EntityValidationException
@@ -100,4 +102,4 @@ class TestCategoryIntegration(unittest.TestCase):
             category.update('Movie', 'some description')
             category.update('Movie', '')
         except EntityValidationException as exception:
-            self.fail(f"Some prop is not valid. Error: {exception.errors}")
+            self.fail(f"Some prop is not valid. Error: {exception.error}")

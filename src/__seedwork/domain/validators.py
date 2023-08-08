@@ -2,11 +2,10 @@ from abc import ABC
 import abc
 from dataclasses import dataclass
 from typing import Any, Dict, Generic, List, TypeVar
+from django.conf import settings
 from rest_framework.fields import BooleanField, CharField
-
 from rest_framework.serializers import Serializer
 from .exceptions import ValidationException
-from django.conf import settings
 
 if not settings.configured:
     settings.configure(USE_I18N=False)
@@ -59,17 +58,17 @@ class ValidatorFieldsInterface(ABC, Generic[PropsValidated]):
 
 class DRFValidator(ValidatorFieldsInterface[PropsValidated], ABC):
 
-    def validate(self, serializer: Serializer):
+    def validate(self, data: Serializer):
 
-        if serializer.is_valid():
-            self.validated_data = dict(serializer.validated_data)
+        if data.is_valid():
+            self.validated_data = dict(data.validated_data)
             return True
-        else:
-            self.errors = {
-                field: [str(_error) for _error in _errors]
-                for field, _errors in serializer.errors.items()
-            }
-            return False
+
+        self.errors = {
+            field: [str(_error) for _error in _errors]
+            for field, _errors in data.errors.items()
+        }
+        return False
 
 
 class StrictCharField(CharField):
@@ -80,15 +79,17 @@ class StrictCharField(CharField):
 
         return super().to_internal_value(data)
 
+
 class StrictBooleanField(BooleanField):
 
+    # pylint: disable=inconsistent-return-statements
     def to_internal_value(self, data):
         try:
             if data is True:
                 return True
-            elif data is False:
+            if data is False:
                 return False
-            elif data is None and self.allow_null:
+            if data is None and self.allow_null:
                 return None
         except TypeError:
             pass

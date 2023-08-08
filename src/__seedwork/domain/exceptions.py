@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-  from __seedwork.domain.validators import ErrorFields
+    from __seedwork.domain.validators import ErrorFields
 
 
 class InvalidUuidException(Exception):
@@ -19,6 +19,7 @@ class EntityValidationException(Exception):
     def __init__(self, error: 'ErrorFields') -> None:
         self.error = error
         super().__init__("Entity Validation Error")
+
 
 class NotFoundException(Exception):
     pass

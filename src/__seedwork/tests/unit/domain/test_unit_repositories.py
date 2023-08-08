@@ -1,10 +1,20 @@
+# pylint: disable=protected-access
 from dataclasses import dataclass
 from typing import List, Optional
 import unittest
 from __seedwork.domain.entities import Entity
 from __seedwork.domain.exceptions import NotFoundException
 
-from __seedwork.domain.repositories import ET, Filter, InMemoryRepository, InMemorySearchableRepository, RepositoryInterface, SearchParams, SearchResult, SearchableRepositoryInterface
+from __seedwork.domain.repositories import (
+    ET,
+    Filter,
+    InMemoryRepository,
+    InMemorySearchableRepository,
+    RepositoryInterface,
+    SearchParams,
+    SearchResult,
+    SearchableRepositoryInterface
+)
 from __seedwork.domain.value_objects import UniqueEntityID
 
 
@@ -12,7 +22,7 @@ class TestRepositoryInterface(unittest.TestCase):
 
     def test_raise_error_when_methods_not_implemented(self):
         with self.assertRaises(TypeError) as assert_error:
-            RepositoryInterface()
+            RepositoryInterface()  # pylint: disable=abstract-class-instantiated
 
         self.assertEqual(
             assert_error.exception.args[0],
@@ -140,7 +150,7 @@ class TestSearchableRepositoryInterface(unittest.TestCase):
 
     def test_raise_error_when_methods_not_implemented(self):
         with self.assertRaises(TypeError) as assert_error:
-            SearchableRepositoryInterface()
+            SearchableRepositoryInterface()  # pylint: disable=abstract-class-instantiated
 
         self.assertEqual(
             "Can't instantiate abstract class SearchableRepositoryInterface with abstract " +
