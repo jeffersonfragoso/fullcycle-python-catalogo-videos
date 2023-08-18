@@ -45,7 +45,8 @@
     "humao.rest-client",
     "bungcip.better-toml",
     "vivaxy.vscode-conventional-commits",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "tabnine.tabnine-vscode"
 ],
    "workspaceFolder": "/home/python/app",
    "remoteUser": "python",
