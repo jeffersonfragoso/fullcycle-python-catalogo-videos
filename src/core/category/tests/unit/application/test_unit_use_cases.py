@@ -1,6 +1,6 @@
 # pylint: disable=no-member,protected-access
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 import unittest
 from unittest.mock import patch
@@ -228,7 +228,7 @@ class TestListCategoriesUseCase(unittest.TestCase):
     def test_execute_using_empty_search_params(self):
         self.category_repo.items = [
             Category(name='teste 1'),
-            Category(name='teste 2', created_at=datetime.now() +
+            Category(name='teste 2', created_at=datetime.now(timezone.utc) +
                      timedelta(seconds=200))
         ]
 

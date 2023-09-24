@@ -1,6 +1,6 @@
 # pylint: disable=protected-access
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import unittest
 from core.category.domain.entities import Category
 
@@ -33,9 +33,9 @@ class TestCategoryInMemoryRepository(unittest.TestCase):
     def test_sort_by_created_at_when_sort_param_is_null(self):
         items = [
             Category(name='test'),
-            Category(name='TEST', created_at=datetime.now() +
+            Category(name='TEST', created_at=datetime.now(timezone.utc) +
                      timedelta(seconds=100)),
-            Category(name='fake', created_at=datetime.now() +
+            Category(name='fake', created_at=datetime.now(timezone.utc) +
                      timedelta(seconds=200)),
         ]
 
@@ -58,9 +58,9 @@ class TestCategoryInMemoryRepository(unittest.TestCase):
     def test_sort_by_created_at(self):
         items = [
             Category(name='test'),
-            Category(name='TEST', created_at=datetime.now() +
+            Category(name='TEST', created_at=datetime.now(timezone.utc) +
                      timedelta(seconds=100)),
-            Category(name='fake', created_at=datetime.now() +
+            Category(name='fake', created_at=datetime.now(timezone.utc) +
                      timedelta(seconds=200)),
         ]
 
