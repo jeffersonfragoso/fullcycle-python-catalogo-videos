@@ -4,26 +4,22 @@ from core.__seedwork.domain.exceptions import NotFoundException
 from core.__seedwork.domain.value_objects import UniqueEntityID
 from core.category.domain.entities import Category
 from core.category.domain.repositories import CategoryRepository
+from core.category.infra.django_app.mappers import CategoryModelMapper
 from core.category.infra.django_app.models import CategoryModel
 
 
 class CategoryDjangoRepository(CategoryRepository):
 
     def insert(self, entity: Category) -> None:
-        CategoryModel.objects.create(**entity.to_dict())
+        model = CategoryModelMapper.to_model(entity)
+        model.save()
 
     def find_by_id(self, entity_id: str | UniqueEntityID) -> Category:
       model = self._get(str(entity_id))
-      return Category(
-        unique_entity_id=UniqueEntityID(str(entity_id)),
-        name=model.name,
-        description=model.description,
-        is_active=model.is_active,
-        created_at=model.created_at
-      )
+      return CategoryModelMapper.to_entity(model)
 
     def find_all(self) -> List[Category]:
-        raise NotImplementedError()
+        return [CategoryModelMapper.to_entity(model) for model in CategoryModel.objects.all()]
 
     def update(self, entity: Category) -> None:
         raise NotImplementedError()
