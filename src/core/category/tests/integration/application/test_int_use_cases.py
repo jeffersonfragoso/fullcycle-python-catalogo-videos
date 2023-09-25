@@ -1,11 +1,16 @@
 import unittest
 from core.__seedwork.domain.exceptions import NotFoundException
+from core.category.application.dto import CategoryOutPutMapper, CategoryOutput
+from core.category.domain.entities import Category
+from core.category.infra.django_app.mappers import CategoryModelMapper
 from core.category.infra.django_app.models import CategoryModel
+from django.utils import timezone
 from model_bakery import baker
 import pytest
 from core.category.application.use_cases import (
     CreateCategoryUseCase,
-    GetCategoryUseCase
+    GetCategoryUseCase,
+    ListCategoriesUseCase
 )
 from core.category.infra.django_app.repositories import CategoryDjangoRepository
 
@@ -121,3 +126,120 @@ class TestGetCategoryUseCaseInt(unittest.TestCase):
             is_active=model.is_active,
             created_at=model.created_at
         ))
+
+
+@pytest.mark.django_db
+class TestListCategoriesUseCaseInt(unittest.TestCase):
+
+    use_case: ListCategoriesUseCase
+    repo: CategoryDjangoRepository
+
+    def setUp(self) -> None:
+        self.repo = CategoryDjangoRepository()
+        self.use_case = ListCategoriesUseCase(self.repo)
+
+    def test_execute_using_empty_search_params(self):
+        models = [
+            baker.make(CategoryModel, created_at=timezone.now()),
+            baker.make(CategoryModel, created_at=timezone.now()),
+        ]
+        input_param = ListCategoriesUseCase.Input()
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, ListCategoriesUseCase.Output(
+            items=[
+                self.from_model_to_output(models[1]),
+                self.from_model_to_output(models[0]),
+            ],
+            total=2,
+            current_page=1,
+            per_page=15,
+            last_page=1
+        ))
+
+    def test_execute_using_pagination_and_sort_and_filter(self):
+
+        models = [
+            baker.make(CategoryModel, name='a'),
+            baker.make(CategoryModel, name='AAA'),
+            baker.make(CategoryModel, name='AaA'),
+            baker.make(CategoryModel, name='b'),
+            baker.make(CategoryModel, name='c'),
+        ]
+
+        input_param = ListCategoriesUseCase.Input(
+            page=1,
+            per_page=2,
+            sort='name',
+            sort_dir='asc',
+            filter='a'
+        )
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, ListCategoriesUseCase.Output(
+            items=[
+                self.from_model_to_output(models[1]),
+                self.from_model_to_output(models[2]),
+            ],
+            total=3,
+            current_page=1,
+            per_page=2,
+            last_page=2
+        ))
+
+        input_param = ListCategoriesUseCase.Input(
+            page=2,
+            per_page=2,
+            sort='name',
+            sort_dir='asc',
+            filter='a'
+        )
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, ListCategoriesUseCase.Output(
+            items=[
+                self.from_model_to_output(models[0]),
+            ],
+            total=3,
+            current_page=2,
+            per_page=2,
+            last_page=2
+        ))
+
+        input_param = ListCategoriesUseCase.Input(
+            page=1,
+            per_page=2,
+            sort='name',
+            sort_dir='desc',
+            filter='a'
+        )
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, ListCategoriesUseCase.Output(
+            items=[
+                self.from_model_to_output(models[0]),
+                self.from_model_to_output(models[2]),
+            ],
+            total=3,
+            current_page=1,
+            per_page=2,
+            last_page=2
+        ))
+
+        input_param = ListCategoriesUseCase.Input(
+            page=2,
+            per_page=2,
+            sort='name',
+            sort_dir='desc',
+            filter='a'
+        )
+        output = self.use_case.execute(input_param)
+        self.assertEqual(output, ListCategoriesUseCase.Output(
+            items=[
+                self.from_model_to_output(models[1]),
+            ],
+            total=3,
+            current_page=2,
+            per_page=2,
+            last_page=2
+        ))
+
+    def from_model_to_output(self, model: CategoryModel) -> CategoryOutput:
+      entity = CategoryModelMapper.to_entity(model)
+      return CategoryOutPutMapper.without_child().to_output(entity)
