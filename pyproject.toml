@@ -14,8 +14,6 @@ dependencies = [
 ]
 requires-python = ">=3.10.2"
 license = {text = "MIT"}
-[project.optional-dependencies]
-
 [build-system]
 requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
@@ -29,6 +27,7 @@ dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-django>=4.5.2",
+    "model-bakery>=1.15.0",
 ]
 
 [tool.pdm.scripts]
