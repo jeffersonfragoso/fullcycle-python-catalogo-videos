@@ -1,4 +1,5 @@
 from typing import List
+from django.core import exceptions as django_exceptions
 from core.__seedwork.domain.exceptions import NotFoundException
 from core.__seedwork.domain.value_objects import UniqueEntityID
 from core.category.domain.entities import Category
@@ -36,5 +37,5 @@ class CategoryDjangoRepository(CategoryRepository):
     def _get(self, entity_id: str) -> CategoryModel:
       try:
           return CategoryModel.objects.get(pk=entity_id)
-      except CategoryModel.DoesNotExist as exception:
+      except (CategoryModel.DoesNotExist, django_exceptions.ValidationError) as exception:
           raise NotFoundException(f"Entity not found using ID '{entity_id}'") from exception
