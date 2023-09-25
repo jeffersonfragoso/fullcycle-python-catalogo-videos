@@ -90,3 +90,25 @@ class TestCategoryDjangoRepositoryInt(unittest.TestCase):
             categories[0], CategoryModelMapper.to_entity(models[0]))
         self.assertEqual(
             categories[1], CategoryModelMapper.to_entity(models[1]))
+
+    def test_throw_not_found_exception_in_update(self):
+        entity = Category(name='Movie')
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.repo.update(entity)
+        self.assertEqual(
+            assert_error.exception.args[0], f"Entity not found using ID '{entity.id}'")
+
+    def test_update(self):
+        category = Category(name='Movie')
+        self.repo.insert(category)
+
+        category.update(name='Movie changed',
+                        description='description changed')
+        self.repo.update(category)
+
+        model = CategoryModel.objects.get(pk=category.id)
+        self.assertEqual(str(model.id), category.id)
+        self.assertEqual(model.name, 'Movie changed')
+        self.assertEqual(model.description, 'description changed')
+        self.assertTrue(model.is_active)
+        self.assertEqual(model.created_at, category.created_at)
