@@ -112,3 +112,46 @@ class TestCategoryDjangoRepositoryInt(unittest.TestCase):
         self.assertEqual(model.description, 'description changed')
         self.assertTrue(model.is_active)
         self.assertEqual(model.created_at, category.created_at)
+
+    def test_throw_not_found_exception_in_delete(self):
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.repo.delete('fake id')
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID 'fake id'")
+
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.repo.delete('af46842e-027d-4c91-b259-3a3642144ba4')
+        self.assertEqual(
+            assert_error.exception.args[0], "Entity not found using ID 'af46842e-027d-4c91-b259-3a3642144ba4'")
+
+        unique_entity_id = UniqueEntityID(
+            'af46842e-027d-4c91-b259-3a3642144ba4')
+        with self.assertRaises(NotFoundException) as assert_error:
+            self.repo.delete(unique_entity_id)
+        self.assertEqual(
+            assert_error.exception.args[0],
+            "Entity not found using ID 'af46842e-027d-4c91-b259-3a3642144ba4'"
+        )
+
+    def test_delete(self):
+        category = Category(name='Movie')
+        self.repo.insert(category)
+
+        self.repo.delete(category.id)
+
+        # try:
+        #     self.repo.find_by_id(category.id)
+        #     self.fail('The entity was not deleted')
+        # except NotFoundException:
+        #     self.assertTrue(True)
+
+        with self.assertRaises(NotFoundException):
+            self.repo.find_by_id(category.id)
+
+        category = Category(name='Movie')
+        self.repo.insert(category)
+
+        self.repo.delete(category.unique_entity_id)
+
+        with self.assertRaises(NotFoundException):
+            self.repo.find_by_id(category.id)
