@@ -2,7 +2,6 @@ import pytest
 from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 
-from core.category.infra.django_app.repositories import CategoryDjangoRepository
 from core.category.tests.fixture.categories_api_fixture import CategoryApiFixture, HttpExpect
 from core.category.domain.repositories import CategoryRepository
 from core.category.infra.django_app.api import CategoryResource
@@ -36,14 +35,9 @@ class TestCategoryResourcePostMethodInt:
         assert response.status_code == 201
         assert CategoryApiFixture.keys_in_category_response() == list(response.data.keys())
         category_created = self.repo.find_by_id(response.data['id'])
-        assert response.data == {
-            'id': category_created.id,
-            'name': category_created.name,
-            'description': category_created.description,
-            'is_active': category_created.is_active,
-            'created_at': category_created.created_at
-        }
 
+        serialized = CategoryResource.category_to_response(category_created)
+        assert response.data == serialized
         expected_data = {
           **http_expect.request.body,
           **http_expect.response.body

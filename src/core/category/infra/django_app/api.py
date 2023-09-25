@@ -1,4 +1,5 @@
 from typing import Callable
+from core.category.application.dto import CategoryOutput
 from core.category.infra.serializers import CategorySerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -23,7 +24,8 @@ class CategoryResource(APIView):
 
         input_param = CreateCategoryUseCase.Input(**serializer.validated_data)
         output = self.create_use_case().execute(input_param)
-        return Response(asdict(output), status=HTTP_201_CREATED)
+        body = CategoryResource.category_to_response(output)
+        return Response(body, status=HTTP_201_CREATED)
 
     def get(self, request: Request, id: str = None): # pylint: disable=redefined-builtin, invalid-name
       if id:
@@ -36,7 +38,8 @@ class CategoryResource(APIView):
     def get_object(self, id: str):  # pylint: disable=redefined-builtin, invalid-name
       input_param = GetCategoryUseCase.Input(id)
       output = self.get_use_case().execute(input_param)
-      return Response(asdict(output))
+      body = CategoryResource.category_to_response(output)
+      return Response(body)
 
     def put(self, request: Request, id: str):
       serializer = CategorySerializer(data=request.data)
@@ -44,9 +47,15 @@ class CategoryResource(APIView):
 
       input_param = UpdateCategoryUseCase.Input(**{'id':id, **serializer.validated_data})
       output = self.update_use_case().execute(input_param)
-      return Response(asdict(output))
+      body = CategoryResource.category_to_response(output)
+      return Response(body)
 
     def delete(self, _request: Request,  id: str):  # pylint: disable=redefined-builtin, invalid-name
       input_param = DeleteCategoryUseCase.Input(id=id)
       self.delete_use_case().execute(input_param)
       return Response(status=HTTP_204_NO_CONTENT)
+
+    @staticmethod
+    def category_to_response(output: CategoryOutput):
+      serializer = CategorySerializer(instance=output)
+      return serializer.data
